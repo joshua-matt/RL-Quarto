@@ -1,15 +1,21 @@
 from Board import Board
+import pygame as pg
 from numpy import random as rn
 
 class Game:
     def __init__(self, p1, p2):
-        self.remaining_pieces = list(range(1,17))
+        self.remaining_pieces = list(range(0,16))
         self.board = Board()
         self.p1 = p1
         self.p2 = p2
 
         self.players = [p1, p2]
         self.current_p = 0
+        self.turn_phase = 0
+        self.key_pressed = pg.K_0
+
+    def pass_key(self, key):
+        self.key_pressed = key
 
     def remove_piece(self, piece):
         self.remaining_pieces.remove(piece)
@@ -50,6 +56,7 @@ class Game:
             print("Player %d wins!" % (self.current_p+2))
 
         return (trajectory, winner)
+
 
 class HumanPlayer:
     def choose_piece(self, board, options):

@@ -2,11 +2,12 @@ import numpy as np
 
 class Board:
     def __init__(self):
-        self.b = np.zeros((4,4),dtype=np.uintc) # Initialize board as empty
+        self.b = -1*np.ones((4,4),dtype=np.uintc) # Initialize board as empty
         self.open_squares = [(i,j) for i in range(4) for j in range(4)]
 
     def clear(self):
-        self.b = np.zeros((4,4))
+        self.b = -1*np.ones((4,4),dtype=np.uintc)
+        self.open_squares = [(i, j) for i in range(4) for j in range(4)]
 
     def has_victory(self):
         # Check if the binary representations of nums have the same bit in at least one place
