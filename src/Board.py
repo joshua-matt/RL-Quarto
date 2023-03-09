@@ -12,14 +12,16 @@ class Board:
     def has_victory(self):
         # Check if the binary representations of nums have the same bit in at least one place
         def all_overlap(nums):
-            one_overlap = nums[0]
-            zero_overlap = ~nums[0]
+            if nums[0] == -1:
+                return False
+            one_overlap = np.array([int(i) for i in '{0:04b}'.format(nums[0])])
+            zero_overlap = 1 - one_overlap
             for n in nums:
-                if n == 0:
+                if n == -1:
                     return False
-                one_overlap = one_overlap & n
-                zero_overlap = zero_overlap & ~n
-            return one_overlap > 0 or zero_overlap > 0
+                one_overlap = one_overlap * np.array([int(i) for i in '{0:04b}'.format(n)])
+                zero_overlap = zero_overlap * (1 - np.array([int(i) for i in '{0:04b}'.format(n)]))
+            return 1 in one_overlap or 1 in zero_overlap
 
         return any([all_overlap(pcs) for pcs in [list(self.b[i,:]) for i in range(4)] # Rows
                                               + [list(self.b[:,i]) for i in range(4)] # Columns
@@ -32,7 +34,7 @@ class Board:
     def print_open(self):
         for i in range(4):
             for j in range(4):
-                if self.b[i,j] == 0:
+                if self.b[i,j] == -1:
                     print(4*j + i + 1, end=" ")
                 else:
                     print("X", end=" ")
@@ -51,7 +53,7 @@ class Board:
     def print_board(self):
         for i in range(4):
             for j in range(4):
-                if self.b[i,j] != 0:
+                if self.b[i,j] != -1:
                     print(self.b[i,j], end=" ")
                 else:
                     print("_", end=" ")
