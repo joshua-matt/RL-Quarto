@@ -1,6 +1,7 @@
 import Board
 import numpy as np
 from engine import Game, AIPlayer
+
 from numpy import random as rn
 
 class QuartoMDP:
@@ -33,10 +34,10 @@ class QuartoMDP:
             for j in range(len(trajectory) - 2, -1, -1):
                 trace[j] = self.lambd * trace[j + 1]
                 move = trajectory[j]
-                s = move[0] + " " + str(move[idx + 1])
-                print(self.Q)
-                a = move[1 if idx == 0 else 3]
+                s = move[0] + str(move[idx + 1])
+                a = move[1 if idx == 0 else 3] # TODO: Awkward, fix
 
+                print(j)
                 if a not in self.Q[s]:
                     self.Q[s][a] = 0
                 if winner == player:

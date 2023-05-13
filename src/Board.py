@@ -23,23 +23,26 @@ class Board:
                 zero_overlap = zero_overlap * (1 - np.array([int(i) for i in '{0:04b}'.format(n)]))
             return 1 in one_overlap or 1 in zero_overlap
 
-        return any([all_overlap(pcs) for pcs in [list(self.b[i,:]) for i in range(4)] # Rows
+        possible_wins = [all_overlap(pcs) for pcs in [list(self.b[i,:]) for i in range(4)] # Rows
                                               + [list(self.b[:,i]) for i in range(4)] # Columns
-                                              + [[self.b[i,i] for i in range(4)], [self.b[i,3-i] for i in range(4)]]]) # Diagonals
+                                              + [[self.b[i,i] for i in range(4)], [self.b[i,3-i] for i in range(4)]]]  # Diagonals
+        return any(possible_wins), possible_wins.index(True) if True in possible_wins else -1
 
     def place_piece(self, piece, coord):
         self.b[coord] = piece
         self.open_squares.remove(coord)
 
+    # For showing human player during placing phase
     def print_open(self):
         for i in range(4):
             for j in range(4):
                 if self.b[i,j] == -1:
-                    print(4*j + i + 1, end=" ")
+                    print('{0:<2}  '.format(4*j + i + 1), end=" ")
                 else:
-                    print("X", end=" ")
+                    print('{0:04b}'.format(self.b[i,j]), end=" ")
             print()
 
+    # For tracking trajectory
     def to_string(self):
         st = ""
         for i in range(4):
@@ -50,11 +53,12 @@ class Board:
                     st += "_ "
         return st
 
+    # For showing human player during choosing phase
     def print_board(self):
         for i in range(4):
             for j in range(4):
                 if self.b[i,j] != -1:
-                    print(self.b[i,j], end=" ")
+                    print('{0:04b}'.format(self.b[i,j]), end="  ")
                 else:
-                    print("_", end=" ")
+                    print("_", end="     ")
             print()

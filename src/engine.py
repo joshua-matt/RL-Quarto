@@ -1,6 +1,6 @@
 from Board import Board
 import pygame as pg
-from numpy import random as rn
+import random as rn
 
 class Game:
     def __init__(self, p1, p2):
@@ -46,17 +46,25 @@ class Game:
             self.current_p = (self.current_p+1)%2
             trajectory.append((self.board.to_string(), piece, self.board.open_squares, coord))
 
-            if self.board.has_victory():
+            has_victory, info = self.board.has_victory()
+            win_method = ""
+            if info < 4:
+                win_method = "row" + str(info + 1)
+            elif info >= 4 and info < 8:
+                win_method = "col" + str(info - 3)
+            else:
+                win_method = "diag" + str(info - 5)
+
+            if has_victory:
                 winner = (self.current_p+1)%2
                 break
 
         if verbose:
             print("\n\nFINAL BOARD")
             self.board.print_board()
-            print("Player %d wins!" % (self.current_p+2))
+            print("Player %d wins by %s!" % (self.current_p+1, win_method))
 
         return (trajectory, winner)
-
 
 class HumanPlayer:
     def choose_piece(self, board, options):
@@ -83,3 +91,10 @@ class AIPlayer:
 
     def place_piece(self, board, piece):
         return self.mdp.piece_function(board, piece)
+
+class MDP:
+    def choice_function(self, board, options):
+        return rn.choice(options)
+
+    def piece_function(self, board, piece):
+        return rn.choice(board.open_squares)
